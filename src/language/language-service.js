@@ -28,6 +28,29 @@ const LanguageService = {
       )
       .where({ language_id })
   },
+
+  /*
+  get user lanuage based on user id in language
+    'head' is where user current is
+  select/join word based on language_id in word
+    return data
+  */
+  getLanuageHead(db, user_id, current_word) {
+    return db
+      .from('language')
+      .join('word', 'language.id', '=', 'word.language_id')
+      .select(
+        'word.id',
+        'word.original',
+        'word.translation',
+        'word.memory_value',
+        'word.correct_count',
+        'word.incorrect_count',
+        'word.language_id',
+        'word.next'
+      )
+      .where({ user_id })
+  }
 }
 
 module.exports = LanguageService
