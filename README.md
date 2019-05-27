@@ -1,5 +1,8 @@
 # Spaced repetition API!
 
+## Links
+https://www.chineseclass101.com/chinese-word-lists/
+
 ## Local dev setup
 
 If using user `dunder-mifflin`:
