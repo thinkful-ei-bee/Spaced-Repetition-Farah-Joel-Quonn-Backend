@@ -45,6 +45,21 @@ const LanguageService = {
         'language.total_score'
       )
       .where({ user_id })
+  },
+  updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
+    let newCount = currentCorrectCount++;
+    return db
+      .from('word')
+      .update({
+        correct_count: newCount
+      })
+      .where({ language_id: user_id })
+  },
+  updateWordIncorrectCount(db, user_id, currentIncorrectCount) {
+    console.log(currentIncorrectCount)
+  },
+  updateTotalScore(db, user_id, currentTotalScore) {
+    console.log(currentTotalScore)
   }
 }
 

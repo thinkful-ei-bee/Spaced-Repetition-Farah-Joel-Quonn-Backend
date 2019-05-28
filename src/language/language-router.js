@@ -72,28 +72,45 @@ languageRouter
 
     */
     const { userGuess } = req.body 
-
+    const db = req.app.get('db')
+    const userId = req.user.id
     try {
 
       const head = await LanguageService.getLanuageHead(
-        req.app.get('db'),
-        req.user.id
+        db,
+        userId
       )
       const correctAnswer = head[0].translation
+      
+      let totalScore = head[0].total_score
+      let wordCorrectCount = head[0].correct_count
+      let wordIncorrectCount = head[0].incorrect_count
+      let wordId = head[0].id
       let checkAnswer;
+
       //userGuess = userGuess.toLowerCase().trim()
       if (userGuess === correctAnswer) {
-        checkAnswer = true;
+        // Update database to correct values for score tracking
+        LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
+        LanguageService.updateTotalScore(db, userId,totalScore)
+        checkAnswer = true
+        // instead of re-querying databse for updated values we can
+        // itterate by 1 and pass that in to the expected json response
+        wordCorrectCount++
+        totalScore++
       }
       else {
+        // if user answers wrong, itterate +1 to incorrect answers
+        LanguageService.updateIncorrectCount(db, req.user.id, wordIncorrectCount)
+        wordIncorrectCount++
         checkAnswer = false;
       }
 
       res.json({
         nextWord: head[0].next,
-        totalScore: 1, // post and add 1 to score
-        wordCorrectCount: 0, // if correct post add 1 here
-        wordIncorrectCount: 0, // if incorrect post add 1 here
+        totalScore, // post and add 1 to score
+        wordCorrectCount, // if correct post add 1 here
+        wordIncorrectCount, // if incorrect post add 1 here
         answer: head[0].translation,
         isCorrect: checkAnswer
       })
