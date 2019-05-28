@@ -3,6 +3,7 @@ const LanguageService = require('./language-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const languageRouter = express.Router()
+const jsonBodyParser = express.json()
 
 languageRouter
   .use(requireAuth)
@@ -50,10 +51,9 @@ languageRouter
         req.app.get('db'),
         req.user.id
       )
-      // console.log(head)
-      // implement auth for this to work .. 
+      console.log(head)
       res.json({
-        nextWord: head[0].original,
+        nextWord: head[0].next,
         totalScore: head[0].total_score,
         wordCorrectCount: head[0].correct_count,
         wordIncorrectCount: head[0].incorrect_count,
@@ -65,9 +65,43 @@ languageRouter
   })
 
 languageRouter
-  .post('/guess', async (req, res, next) => {
-    // implement me
-    res.send('implement me!')
+  .post('/guess', jsonBodyParser, async (req, res, next) => {
+    /* 
+      compare user guess to correct translation
+      craft json response
+
+    */
+    const { userGuess } = req.body 
+
+    try {
+
+      const head = await LanguageService.getLanuageHead(
+        req.app.get('db'),
+        req.user.id
+      )
+      const correctAnswer = head[0].translation
+      let checkAnswer;
+      //userGuess = userGuess.toLowerCase().trim()
+      if (userGuess === correctAnswer) {
+        checkAnswer = true;
+      }
+      else {
+        checkAnswer = false;
+      }
+
+      res.json({
+        nextWord: head[0].next,
+        totalScore: 1, // post and add 1 to score
+        wordCorrectCount: 0, // if correct post add 1 here
+        wordIncorrectCount: 0, // if incorrect post add 1 here
+        answer: head[0].translation,
+        isCorrect: checkAnswer
+      })
+      
+    } catch (error) {
+      next(error)
+    }
+
   })
 
 module.exports = languageRouter
