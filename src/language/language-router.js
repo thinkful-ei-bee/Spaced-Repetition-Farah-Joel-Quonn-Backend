@@ -91,8 +91,8 @@ languageRouter
       //userGuess = userGuess.toLowerCase().trim()
       if (userGuess === correctAnswer) {
         // Update database to correct values for score tracking
-        LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
-        LanguageService.updateTotalScore(db, userId,totalScore)
+        await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
+        await LanguageService.updateTotalScore(db, userId,totalScore)
         checkAnswer = true
         // instead of re-querying databse for updated values we can
         // itterate by 1 and pass that in to the expected json response

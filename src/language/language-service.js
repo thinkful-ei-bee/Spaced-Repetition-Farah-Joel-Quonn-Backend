@@ -48,12 +48,14 @@ const LanguageService = {
   },
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
     let newCount = currentCorrectCount++;
-    return db
-      .from('word')
+    return db('word')
       .update({
-        correct_count: newCount
+        correct_count: 1
       })
-      .where({ language_id: user_id })
+      .where({
+        id: word_id,
+        language_id: user_id
+      })
   },
   updateWordIncorrectCount(db, user_id, currentIncorrectCount) {
     console.log(currentIncorrectCount)
