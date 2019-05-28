@@ -66,14 +66,11 @@ languageRouter
 
 languageRouter
   .post('/guess', jsonBodyParser, async (req, res, next) => {
-    /* 
-      compare user guess to correct translation
-      craft json response
 
-    */
     const { userGuess } = req.body 
     const db = req.app.get('db')
     const userId = req.user.id
+
     try {
 
       const head = await LanguageService.getLanuageHead(
@@ -92,16 +89,16 @@ languageRouter
       if (userGuess === correctAnswer) {
         // Update database to correct values for score tracking
         await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
-        await LanguageService.updateTotalScore(db, userId,totalScore)
-        checkAnswer = true
+        await LanguageService.updateTotalScore(db, userId, totalScore)
         // instead of re-querying databse for updated values we can
         // itterate by 1 and pass that in to the expected json response
         wordCorrectCount++
         totalScore++
+        checkAnswer = true
       }
       else {
         // if user answers wrong, itterate +1 to incorrect answers
-        LanguageService.updateIncorrectCount(db, req.user.id, wordIncorrectCount)
+        await LanguageService.updateWordIncorrectCount(db, wordId, userId, wordIncorrectCount)
         wordIncorrectCount++
         checkAnswer = false;
       }

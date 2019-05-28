@@ -47,21 +47,39 @@ const LanguageService = {
       .where({ user_id })
   },
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
-    let newCount = currentCorrectCount++;
+    let newCount = currentCorrectCount + 1
     return db('word')
       .update({
-        correct_count: 1
+        correct_count: newCount
       })
       .where({
         id: word_id,
         language_id: user_id
       })
   },
-  updateWordIncorrectCount(db, user_id, currentIncorrectCount) {
+  updateWordIncorrectCount(db, word_id, user_id, currentIncorrectCount) {
     console.log(currentIncorrectCount)
+    let newCount = currentIncorrectCount + 1
+    return db('word')
+      .update({
+        incorrect_count: newCount
+      })
+      .where({
+        id: word_id,
+        language_id: user_id
+      })
   },
-  updateTotalScore(db, user_id, currentTotalScore) {
-    console.log(currentTotalScore)
+  updateTotalScore(db, userId, currentTotalScore) {
+    
+    let newScore = currentTotalScore++;
+    //console.log(newScore) // ...
+    return db('language')
+      .update({
+        total_score: newScore
+      })
+      // .where({
+      //   user_id: userId
+      // })
   }
 }
 
