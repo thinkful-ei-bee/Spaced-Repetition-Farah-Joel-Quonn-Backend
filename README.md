@@ -2,7 +2,9 @@
 
 ## Links
 https://www.chineseclass101.com/chinese-word-lists/
-
+{
+    "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJuYW1lIjoiSm9lbCIsImlhdCI6MTU1OTAwOTc1OCwiZXhwIjoxNTU5MDIwNTU4LCJzdWIiOiJzbG93b25lIn0.T6JzMNUf7SB3IFTBofI4Y0Jz_NLpGd_DOicOxzpfn3A"
+}
 ## Local dev setup
 
 If using user `dunder-mifflin`:
