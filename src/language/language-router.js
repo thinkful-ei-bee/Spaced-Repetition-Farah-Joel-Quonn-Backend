@@ -99,6 +99,7 @@ languageRouter
       else {
         // if user answers wrong, itterate +1 to incorrect answers
         await LanguageService.updateWordIncorrectCount(db, wordId, userId, wordIncorrectCount)
+                
         wordIncorrectCount++
         checkAnswer = false;
       }

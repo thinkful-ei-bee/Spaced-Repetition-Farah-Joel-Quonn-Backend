@@ -69,17 +69,17 @@ const LanguageService = {
         language_id: user_id
       })
   },
-  updateTotalScore(db, userId, currentTotalScore) {
+  updateTotalScore(db, user_id, currentTotalScore) {
     
-    let newScore = currentTotalScore++;
+    let newScore = currentTotalScore + 1
     //console.log(newScore) // ...
     return db('language')
       .update({
         total_score: newScore
       })
-      // .where({
-      //   user_id: userId
-      // })
+      .where({
+        id: user_id
+      })
   }
 }
 
