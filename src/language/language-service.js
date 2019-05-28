@@ -29,14 +29,6 @@ const LanguageService = {
       .where({ language_id })
   },
 
-  /*
-  get user lanuage based on user id in language
-    'head' is where user current is
-  select/join word based on language_id in word
-    return data
-
-  treat head in langauge as f_key to word
-  */
   getLanuageHead(db, user_id) {
     return db
       .from('language')
