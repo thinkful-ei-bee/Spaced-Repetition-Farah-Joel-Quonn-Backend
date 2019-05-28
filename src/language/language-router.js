@@ -44,18 +44,19 @@ languageRouter
   })
 
 languageRouter
-  .get('/head/:currentWordId', async (req, res, next) => {
+  .get('/head', async (req, res, next) => {
     try {
       const head = await LanguageService.getLanuageHead(
         req.app.get('db'),
-        req.params.wordId
+        req.user.id
       )
-      console.log(this.language)
+      // console.log(head)
+      // implement auth for this to work .. 
       res.json({
-        nextWord: 'original 1',
-        totalScore: 0,
-        wordCorrectCount: 0,
-        wordIncorrectCount: 0,
+        nextWord: head[0].original,
+        totalScore: head[0].total_score,
+        wordCorrectCount: head[0].correct_count,
+        wordIncorrectCount: head[0].incorrect_count,
       })
       next()
     } catch (error) {

@@ -34,8 +34,10 @@ const LanguageService = {
     'head' is where user current is
   select/join word based on language_id in word
     return data
+
+  treat head in langauge as f_key to word
   */
-  getLanuageHead(db, user_id, current_word) {
+  getLanuageHead(db, user_id) {
     return db
       .from('language')
       .join('word', 'language.id', '=', 'word.language_id')
@@ -47,7 +49,8 @@ const LanguageService = {
         'word.correct_count',
         'word.incorrect_count',
         'word.language_id',
-        'word.next'
+        'word.next',
+        'language.total_score'
       )
       .where({ user_id })
   }
