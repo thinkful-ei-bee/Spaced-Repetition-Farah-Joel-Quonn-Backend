@@ -65,8 +65,8 @@ const UserService = {
         ['zuótiān', 'yesterday', 6],
         ['rìlì', 'calendar', 7],
         ['miǎo', 'second', 8],
-        ['xiǎoshí', 'hour', null],
-        ['fēnzhōng', 'minute', null],
+        ['xiǎoshí', 'hour', 9],
+        ['fēnzhōng', 'minute', 10],
         ['zhōngbiǎo', 'clock', null],
       ]
 
