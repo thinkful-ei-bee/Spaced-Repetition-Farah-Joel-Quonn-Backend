@@ -84,6 +84,7 @@ languageRouter
       let wordCorrectCount = head[0].correct_count
       let wordIncorrectCount = head[0].incorrect_count
       let wordId = head[0].id
+      let wordMemoryValue = head[0].memory_value
       let checkAnswer;
 
       //userGuess = userGuess.toLowerCase().trim()
@@ -91,6 +92,7 @@ languageRouter
         // Update database to correct values for score tracking
         await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
         await LanguageService.updateTotalScore(db, userId, totalScore)
+        await LanguageService.updateMemoryValue(db, wordId, userId, wordMemoryValue)
         // instead of re-querying databse for updated values we can
         // itterate by 1 and pass that in to the expected json response
         wordCorrectCount++
@@ -100,7 +102,7 @@ languageRouter
       else {
         // if user answers wrong, itterate +1 to incorrect answers
         await LanguageService.updateWordIncorrectCount(db, wordId, userId, wordIncorrectCount)
-                
+        await LanguageService.resetMemoryValue(db, wordId, userId, wordMemoryValue)
         wordIncorrectCount++
         checkAnswer = false;
       }

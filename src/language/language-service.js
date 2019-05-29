@@ -86,9 +86,33 @@ const LanguageService = {
       .where({
         id: user_id
       })
+  },
+
+  updateMemoryValue(db, word_id, user_id, currentMemoryValue) {
+    let newMemoryValue = currentMemoryValue * 2
+    return db('word')
+      .update({
+        memory_value: newMemoryValue
+      })
+      .where({
+        id: word_id,
+        language_id: user_id
+      })
+  }, 
+
+  resetMemoryValue(db, word_id, user_id, currentMemoryValue) {
+    let newMemoryValue = currentMemoryValue * 2
+    return db('word')
+      .update({
+        memory_value: 1
+      })
+      .where({
+        id: word_id,
+        language_id: user_id
+      })
   }
 
-  
+
 }
 
 module.exports = LanguageService
