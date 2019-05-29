@@ -5,6 +5,13 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const languageRouter = express.Router()
 const jsonBodyParser = express.json()
 
+const LanguageListService = require('./language-list-service')
+const LinkedList = require('../linked-list')
+
+let list = new LinkedList
+list = LanguageListService.buildList(list)
+console.log(list)
+
 languageRouter
   .use(requireAuth)
   .use(async (req, res, next) => {
@@ -51,7 +58,7 @@ languageRouter
         req.app.get('db'),
         req.user.id
       )
-      console.log(head)
+           
       res.json({
         // nextWord: head[0].next,
         nextWord: head[0].original,
