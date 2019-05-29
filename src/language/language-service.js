@@ -29,10 +29,25 @@ const LanguageService = {
       .where({ language_id })
   },
 
+  // getLanuageHeadHelper(db, user_id) {
+  //   return db
+  //   .from('language')
+  //   .select(
+  //     'head'
+  //   )
+  //   .where({
+  //     user_id
+  //   })
+  // },
+
   getLanuageHead(db, user_id) {
     return db
       .from('language')
-      .join('word', 'language.id', '=', 'word.language_id')
+      // .join('word', 'language.id', '=', 'word.language_id')
+      .join('word', {
+        'language.id': 'word.language_id',
+        'word.id': 'language.head'
+      })
       .select(
         'word.id',
         'word.original',
@@ -42,9 +57,16 @@ const LanguageService = {
         'word.incorrect_count',
         'word.language_id',
         'word.next',
-        'language.total_score'
+        'language.total_score',
+        // 'language.head'
       )
-      .where({ user_id })
+      .where({ 
+        user_id,
+        // 'word.id': 'head'
+      })
+      // .where(
+      //   'word.id', 'language.head'
+      // )
   },
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
     let newCount = currentCorrectCount + 1
