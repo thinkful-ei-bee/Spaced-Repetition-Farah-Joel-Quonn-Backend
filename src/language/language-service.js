@@ -29,17 +29,6 @@ const LanguageService = {
       .where({ language_id })
   },
 
-  // getLanuageHeadHelper(db, user_id) {
-  //   return db
-  //   .from('language')
-  //   .select(
-  //     'head'
-  //   )
-  //   .where({
-  //     user_id
-  //   })
-  // },
-
   getLanuageHead(db, user_id) {
     return db
       .from('language')
@@ -58,16 +47,12 @@ const LanguageService = {
         'word.language_id',
         'word.next',
         'language.total_score',
-        // 'language.head'
       )
       .where({ 
         user_id,
-        // 'word.id': 'head'
       })
-      // .where(
-      //   'word.id', 'language.head'
-      // )
   },
+
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
     let newCount = currentCorrectCount + 1
     return db('word')
@@ -79,6 +64,7 @@ const LanguageService = {
         language_id: user_id
       })
   },
+
   updateWordIncorrectCount(db, word_id, user_id, currentIncorrectCount) {
     let newCount = currentIncorrectCount + 1
     return db('word')
@@ -90,6 +76,7 @@ const LanguageService = {
         language_id: user_id
       })
   },
+
   updateTotalScore(db, user_id, currentTotalScore) {    
     let newScore = currentTotalScore + 1
     return db('language')
@@ -100,6 +87,8 @@ const LanguageService = {
         id: user_id
       })
   }
+
+  
 }
 
 module.exports = LanguageService
