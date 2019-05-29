@@ -53,7 +53,8 @@ languageRouter
       )
       console.log(head)
       res.json({
-        nextWord: head[0].next,
+        // nextWord: head[0].next,
+        nextWord: head[0].original,
         totalScore: head[0].total_score,
         wordCorrectCount: head[0].correct_count,
         wordIncorrectCount: head[0].incorrect_count,

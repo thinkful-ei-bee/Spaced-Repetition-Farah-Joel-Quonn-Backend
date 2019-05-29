@@ -58,7 +58,6 @@ const LanguageService = {
       })
   },
   updateWordIncorrectCount(db, word_id, user_id, currentIncorrectCount) {
-    console.log(currentIncorrectCount)
     let newCount = currentIncorrectCount + 1
     return db('word')
       .update({
@@ -69,10 +68,8 @@ const LanguageService = {
         language_id: user_id
       })
   },
-  updateTotalScore(db, user_id, currentTotalScore) {
-    
+  updateTotalScore(db, user_id, currentTotalScore) {    
     let newScore = currentTotalScore + 1
-    //console.log(newScore) // ...
     return db('language')
       .update({
         total_score: newScore
