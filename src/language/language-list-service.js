@@ -1,18 +1,18 @@
 const listHelpers = require('../linked-list-helpers')
 
-function buildList(list) {
-  const words = [
-    'zhōu',
-    'nián',
-    'jīntiān',
-    'míngtiān',
-    'zuótiān',
-    'rìlì',
-    'miǎo',
-    'xiǎoshí',
-    'fēnzhōng',
-    'zhōngbiǎo'
-  ]
+function buildList(list, words) {
+  // const words = [
+  //   'zhōu',
+  //   'nián',
+  //   'jīntiān',
+  //   'míngtiān',
+  //   'zuótiān',
+  //   'rìlì',
+  //   'miǎo',
+  //   'xiǎoshí',
+  //   'fēnzhōng',
+  //   'zhōngbiǎo'
+  // ]
   
   if (list.head === null) {
     words.forEach(word => {
@@ -23,12 +23,9 @@ function buildList(list) {
   return list
 }
 
-// have to know current position of item in list
-// then move back M spaces
-
 function display(list) {
   listHelpers.displayList(list);
-  console.log(findIndex(list, 'nián'))
+  //console.log(findIndex(list, 'nián'))
   //console.log(list)
 }
 
@@ -67,12 +64,14 @@ function getTotal(list) {
 }
 
 function moveListItem(list, listItem, moveToIndex, listCount) {
-  if (moveToIndex === listCount) {
-
+  if(moveToIndex > listCount) {
+    moveToIndex = listCount
   }
   
-  console.log(moveToIndex)
-  console.log(listCount)
+  list.remove(listItem)
+  list.insertAt(moveToIndex, listItem)
+
+  return list
 }
 
 module.exports = { buildList, display, moveListItem, getTotal }

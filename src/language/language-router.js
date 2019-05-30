@@ -9,9 +9,9 @@ const LanguageListService = require('./language-list-service')
 const LinkedList = require('../linked-list')
 
 let list = new LinkedList
-list = LanguageListService.buildList(list)
-//console.log(list)
-LanguageListService.display(list)
+//list = LanguageListService.buildList(list)
+// console.log(list)
+//LanguageListService.display(list)
 
 languageRouter
   .use(requireAuth)
@@ -41,7 +41,7 @@ languageRouter
         req.app.get('db'),
         req.language.id,
       )
-
+      
       res.json({
         language: req.language,
         words,
@@ -76,9 +76,20 @@ languageRouter
 languageRouter
   .post('/guess', jsonBodyParser, async (req, res, next) => {
 
-    const { userGuess } = req.body 
+    const { guess } = req.body 
     const db = req.app.get('db')
     const userId = req.user.id
+
+    // If list not built yet, grab words and build list
+    if(list.head === null) {
+      const words = await LanguageService.getLanguageWords(
+        req.app.get('db'),
+        req.language.id,
+      )
+      LanguageListService.buildList(list, words)
+    }
+    console.log('list: ')
+    LanguageListService.display(list)
 
     try {
 
@@ -97,7 +108,7 @@ languageRouter
       let checkAnswer;
 
       //userGuess = userGuess.toLowerCase().trim()
-      if (userGuess === correctAnswer) {
+      if (guess === correctAnswer) {
         // Update database to correct values for score tracking
         await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
         await LanguageService.updateTotalScore(db, userId, totalScore)
@@ -106,8 +117,6 @@ languageRouter
         // itterate by 1 and pass that in to the expected json response
         wordCorrectCount++
         totalScore++
-        //wordMemoryValue = wordMemoryValue * 2
-        console.log('wordMemoryValue: ' + wordMemoryValue)
         checkAnswer = true
       }
       else {
@@ -119,10 +128,16 @@ languageRouter
       }
 
       // move list item M spaces back in list
-      LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
+      // LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
+      // LanguageListService.display(list)
+
       // console.log(head)
+      // let nextWord = list.find(head[0].original).next.value
+      //console.log(nextWord)
+
       res.json({
         nextWord: head[0].next,
+        // nextWord: nextWord,
         totalScore, // post and add 1 to score
         wordCorrectCount, // if correct post add 1 here
         wordIncorrectCount, // if incorrect post add 1 here
