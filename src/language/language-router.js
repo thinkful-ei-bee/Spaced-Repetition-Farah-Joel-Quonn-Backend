@@ -119,8 +119,8 @@ languageRouter
       }
 
       // move list item M spaces back in list
-      LanguageListService.moveListItem(list, head[0].original, wordMemoryValue)
-      console.log(head)
+      LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
+      // console.log(head)
       res.json({
         nextWord: head[0].next,
         totalScore, // post and add 1 to score

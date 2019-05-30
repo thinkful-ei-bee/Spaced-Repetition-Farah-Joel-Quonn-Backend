@@ -89,7 +89,7 @@ const LanguageService = {
   },
 
   updateMemoryValue(db, word_id, user_id, currentMemoryValue, listTotal) {
-    console.log('list total: ' + listTotal)
+    let newMemoryValue
 
     // address out of range for smallint error
     // also for sanity, keep memory value within
@@ -98,7 +98,7 @@ const LanguageService = {
       newMemoryValue = listTotal
     }
     else {
-      let newMemoryValue = currentMemoryValue * 2
+      newMemoryValue = currentMemoryValue * 2
     }
 
     return db('word')

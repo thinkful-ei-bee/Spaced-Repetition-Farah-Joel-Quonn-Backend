@@ -66,10 +66,13 @@ function getTotal(list) {
   return count;
 }
 
-function moveListItem(list, listItem, moveToIndex) {
-  let total = getTotal(list)
+function moveListItem(list, listItem, moveToIndex, listCount) {
+  if (moveToIndex === listCount) {
+
+  }
+  
   console.log(moveToIndex)
-  console.log(total)
+  console.log(listCount)
 }
 
 module.exports = { buildList, display, moveListItem, getTotal }
