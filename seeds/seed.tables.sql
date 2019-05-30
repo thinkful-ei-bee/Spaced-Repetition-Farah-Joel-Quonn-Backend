@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'utf8';
+
 BEGIN;
 
 TRUNCATE
@@ -31,6 +33,7 @@ VALUES
   (8, 1, 'xiǎoshí', 'hour', 9),
   (9, 1, 'fēnzhōng', 'minute', 10),
   (10, 1, 'zhōngbiǎo', 'clock', null);
+  
 
 UPDATE "language" SET head = 1 WHERE id = 1;
 
