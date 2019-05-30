@@ -83,11 +83,11 @@ class LinkedList {
       //if the list is empty
       if (!this.head){
           return null;
-      }
+      }      
       //if the node to be removed is head, make the next node head
-      if(this.head === item){
-          this.head = this.head.next;
-          return;
+      if(this.head.value === item){
+        this.head = this.head.next;
+        return;
       }
       //start at the head
       let currNode = this.head;

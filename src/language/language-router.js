@@ -106,8 +106,6 @@ languageRouter
         // itterate by 1 and pass that in to the expected json response
         wordCorrectCount++
         totalScore++
-        //wordMemoryValue = wordMemoryValue * 2
-        console.log('wordMemoryValue: ' + wordMemoryValue)
         checkAnswer = true
       }
       else {
@@ -120,7 +118,7 @@ languageRouter
 
       // move list item M spaces back in list
       LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
-      // console.log(head)
+      LanguageListService.display(list)
       res.json({
         nextWord: head[0].next,
         totalScore, // post and add 1 to score

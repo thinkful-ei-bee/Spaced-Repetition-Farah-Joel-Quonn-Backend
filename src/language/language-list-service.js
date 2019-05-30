@@ -67,12 +67,17 @@ function getTotal(list) {
 }
 
 function moveListItem(list, listItem, moveToIndex, listCount) {
-  if (moveToIndex === listCount) {
-
+  if(moveToIndex > listCount) {
+    moveToIndex = listCount
   }
-  
-  console.log(moveToIndex)
-  console.log(listCount)
+  //console.log(listItem)
+  list.remove(listItem)
+  list.insertAt(moveToIndex, listItem)
+  // console.log(moveToIndex)
+  // console.log(listCount)
+  display(list)
+  return list
+
 }
 
 module.exports = { buildList, display, moveListItem, getTotal }
