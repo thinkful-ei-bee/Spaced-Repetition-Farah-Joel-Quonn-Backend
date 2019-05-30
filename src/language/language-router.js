@@ -10,7 +10,8 @@ const LinkedList = require('../linked-list')
 
 let list = new LinkedList
 list = LanguageListService.buildList(list)
-console.log(list)
+//console.log(list)
+LanguageListService.display(list)
 
 languageRouter
   .use(requireAuth)
@@ -113,6 +114,8 @@ languageRouter
         wordIncorrectCount++
         checkAnswer = false;
       }
+
+      // move list item M spaces back in list
 
       res.json({
         nextWord: head[0].next,

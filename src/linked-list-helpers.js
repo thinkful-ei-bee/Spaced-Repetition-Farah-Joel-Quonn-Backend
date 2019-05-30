@@ -50,4 +50,4 @@ function findLast(lst){
     return tempNode;
 }
 
-module.exporst = { displayList, size, isEmpty, findPrevious, findLast }
+module.exports = { displayList, size, isEmpty, findPrevious, findLast }
