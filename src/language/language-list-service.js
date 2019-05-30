@@ -51,4 +51,25 @@ function findIndex(list, item) {
   return count;
 }
 
-module.exports = { buildList, display }
+function getTotal(list) {
+  let currNode = list.head;
+  let count = 0;
+
+  if (!list.head) {
+    return null;
+  }
+
+  while (currNode.next !== null) {
+    currNode = currNode.next;
+    count++;
+  }
+  return count;
+}
+
+function moveListItem(list, listItem, moveToIndex) {
+  let total = getTotal(list)
+  console.log(moveToIndex)
+  console.log(total)
+}
+
+module.exports = { buildList, display, moveListItem, getTotal }

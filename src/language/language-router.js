@@ -93,6 +93,7 @@ languageRouter
       let wordIncorrectCount = head[0].incorrect_count
       let wordId = head[0].id
       let wordMemoryValue = head[0].memory_value
+      let listCount = LanguageListService.getTotal(list)
       let checkAnswer;
 
       //userGuess = userGuess.toLowerCase().trim()
@@ -100,11 +101,13 @@ languageRouter
         // Update database to correct values for score tracking
         await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
         await LanguageService.updateTotalScore(db, userId, totalScore)
-        await LanguageService.updateMemoryValue(db, wordId, userId, wordMemoryValue)
+        await LanguageService.updateMemoryValue(db, wordId, userId, wordMemoryValue, listCount)
         // instead of re-querying databse for updated values we can
         // itterate by 1 and pass that in to the expected json response
         wordCorrectCount++
         totalScore++
+        //wordMemoryValue = wordMemoryValue * 2
+        console.log('wordMemoryValue: ' + wordMemoryValue)
         checkAnswer = true
       }
       else {
@@ -116,7 +119,8 @@ languageRouter
       }
 
       // move list item M spaces back in list
-
+      LanguageListService.moveListItem(list, head[0].original, wordMemoryValue)
+      console.log(head)
       res.json({
         nextWord: head[0].next,
         totalScore, // post and add 1 to score
