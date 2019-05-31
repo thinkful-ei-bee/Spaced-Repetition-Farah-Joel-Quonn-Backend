@@ -60,13 +60,15 @@ languageRouter
         req.user.id
       )
       
-      res.json({
+      const resObj = {
         // nextWord: head[0].next,
         nextWord: head[0].original,
         totalScore: head[0].total_score,
         wordCorrectCount: head[0].correct_count,
         wordIncorrectCount: head[0].incorrect_count,
-      })
+      }
+
+      res.json(resObj)
       next()
     } catch (error) {
       next(error)
@@ -77,6 +79,7 @@ languageRouter
   .post('/guess', jsonBodyParser, async (req, res, next) => {
 
     const { guess } = req.body 
+    const resObj = {}
     const db = req.app.get('db')
     const userId = req.user.id
     // If list not built yet, grab words and build list
@@ -92,11 +95,12 @@ languageRouter
 
     try {
 
-      const head = await LanguageService.getLanuageHead(
+      let head = await LanguageService.getLanuageHead(
         db,
         userId
       )
-     // console.log('head', head)
+     console.log('head', head)
+     head = await head;
 
       const words = await LanguageService.getLanguageWords(
         db,
@@ -140,47 +144,78 @@ languageRouter
       console.log('heads:', head[0].next)
      // console.log('words', words)
     //  console.log('newHead', head)
-
-
-      // move head depending on memory value
-      list.remove(head[0]);
-      if (wordMemoryValue >= words.length -1) {
-        list.insertLast(head[0])
-      } else {
-        list.insertAt(head[0], wordMemoryValue)
-      }
-
-
-      // move list item M spaces back in list
-      // LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
-      // LanguageListService.display(list)
-
-      console.log(head[0])
-      // let nextWord = list.find(head[0].original).next.value
-      //console.log(nextWord)
-
-      let newHead = head[0].next;
+      let newHead = head[0].next
       let curWord = head[0];
 
       curWord = curWord[0];
+   //   console.log('curWord', curWord)
 
       curWord = await LanguageService.getWordFromId(
         req.app.get('db'),
-        curWord.next
+        head[0].next
       );
       curWord = curWord[0];
-      console.log('Current word is', curWord);
-      //console.log('next will be ', currentWord.next);
+      console.log('Current word is', curWord.original);
+      console.log('next will be ', curWord.next);
     
+      await LanguageService.updateWord(
+        req.app.get('db'),
+        curWord.id,
+        {next: curWord.next, 
+          wordMemoryValue: curWord.wordMemoryValue,
+          wordCorrectCount: curWord.wordCorrectCount,
+          wordIncorrectCount: curWord.wordIncorrectCount
+        }
+      );
+      
+      await LanguageService.updateWord(
+        req.app.get('db'),
+        curWord.id,
+        {next: curWord.id},
+        console.log(head[0].id),
+        console.log(curWord.id)
+      );
+
+
+      await LanguageService.updateLanguage(
+        req.app.get('db'), 
+        req.language.id, 
+        {
+          head: newHead,
+        //  totalScore: Number(score.totalscore)
+        }
+      );
+      
+      let nextWord = await LanguageService.getLanuageHead(
+        req.app.get('db'),
+        req.user.id
+      );
+  
+      nextWord = nextWord[0];
+
+      resObj.nextWord = nextWord.original;
+      resObj.wordCorrectCount = nextWord.correct_count;
+      resObj.wordIncorrectCount = nextWord.incorrect_count;
+      resObj.answer = nextWord.translation;
+      //resObj.totalScore = Number(score.totalscore);
+
+      // res.json({
+      //   nextWord: curWord.original, 
+      //   totalScore, // post and add 1 to score
+      //   wordCorrectCount, // if correct post add 1 here
+      //   wordIncorrectCount, // if incorrect post add 1 here
+      //   answer: curWord.translation,
+      //   isCorrect: checkAnswer
+      // }) 
+
       res.json({
-        nextWord: head[0].next, 
-        // nextWord: nextWord,
-        totalScore, // post and add 1 to score
-        wordCorrectCount, // if correct post add 1 here
-        wordIncorrectCount, // if incorrect post add 1 here
-        answer: head[0].translation,
-        isCorrect: checkAnswer
-      }) 
+        nextWord: resObj.nextWord,
+        totalScore: resObj.totalScore,
+        wordCorrectCount: resObj.wordCorrectCount,
+        wordIncorrectCount: resObj.wordIncorrectCount,
+        answer: resObj.answer,
+        isCorrect: resObj.isCorrect
+      })
     } catch (error) {
       next(error)
     }

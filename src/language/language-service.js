@@ -72,7 +72,7 @@ const LanguageService = {
     return db 
     .from('word')
     .select('*')
-    .where({ id });
+    .where( {'word_id': id}  );
   },
 
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
@@ -153,6 +153,23 @@ const LanguageService = {
       .from('word')
       .select('*')
       .where({ id });
+  },
+
+  updateWord(db, id, word) {
+    return db
+    .from('word')
+    .where({ id })
+    .update(word) 
+  },
+
+  updateLanguage(db, id, obj) {
+    return db
+    .from('language')
+    .where({id})
+    .update({
+      head: obj.head, 
+      total_score: obj.total_score
+    });
   }
 
 }
