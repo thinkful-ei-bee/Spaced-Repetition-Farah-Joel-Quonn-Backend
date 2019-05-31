@@ -59,7 +59,7 @@ languageRouter
         req.app.get('db'),
         req.user.id
       )
-        
+      
       res.json({
         // nextWord: head[0].next,
         nextWord: head[0].original,
@@ -87,7 +87,7 @@ languageRouter
       )
       LanguageListService.buildList(list, words)
     }
-    console.log('list: ')
+    //console.log('list: ')
     LanguageListService.display(list)
 
     try {
@@ -96,7 +96,7 @@ languageRouter
         db,
         userId
       )
-      console.log('head', head)
+     // console.log('head', head)
 
       const words = await LanguageService.getLanguageWords(
         db,
@@ -105,7 +105,7 @@ languageRouter
 
       //console.log('words', words)
       const nextHead = words.filter(word => word.id === head[0].next);
-      console.log('nexthead', nextHead)
+     // console.log('nexthead', nextHead)
 
       const correctAnswer = head[0].translation
       
@@ -137,7 +137,7 @@ languageRouter
         checkAnswer = false;
       }
 
-      const newHead = nextHead[0].next
+      console.log('heads:', head[0].next)
      // console.log('words', words)
     //  console.log('newHead', head)
 
@@ -150,7 +150,6 @@ languageRouter
         list.insertAt(head[0], wordMemoryValue)
       }
 
-      console.log('newList', LanguageListService.display(list))
 
       // move list item M spaces back in list
       // LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
