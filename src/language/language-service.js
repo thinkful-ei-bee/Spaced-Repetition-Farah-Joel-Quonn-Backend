@@ -53,6 +53,21 @@ const LanguageService = {
       })
   },
 
+  getNextWord(db, user_id) {
+    return db
+      .from('word')
+      .select(
+        'original',
+        'translation',
+        'correct_count',
+        'incorrect_count',
+        'language_id'
+      )
+      .join('language_id', 'language', '=', 'word.language_id' )
+      .where('word_id', db.raw('language.head'))
+      .andWhere({ 'language.user_id': user_id});
+  },
+
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
     let newCount = currentCorrectCount + 1
     return db('word')
@@ -125,8 +140,6 @@ const LanguageService = {
         language_id: user_id
       })
   }
-
-
 }
 
 module.exports = LanguageService
