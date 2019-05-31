@@ -124,8 +124,14 @@ const LanguageService = {
         id: word_id,
         language_id: user_id
       })
-  }
+  },
 
+  getWordFromId(db, id) {
+    return db 
+      .from('word')
+      .select('*')
+      .where({ id });
+  }
 
 }
 

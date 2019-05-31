@@ -131,10 +131,23 @@ languageRouter
       // LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
       // LanguageListService.display(list)
 
-      // console.log(head)
+      console.log(head[0])
       // let nextWord = list.find(head[0].original).next.value
       //console.log(nextWord)
 
+      let newHead = head[0].next;
+      let curWord = head[0];
+
+      curWord = curWord[0];
+
+      curWord = await LanguageService.getWordFromId(
+        req.app.get('db'),
+        curWord.next
+      );
+      curWord = curWord[0];
+      console.log('Current word is', curWord);
+      //console.log('next will be ', currentWord.next);
+    
       res.json({
         nextWord: head[0].next,
         // nextWord: nextWord,
