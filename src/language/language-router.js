@@ -59,7 +59,7 @@ languageRouter
         req.app.get('db'),
         req.user.id
       )
-           
+        
       res.json({
         // nextWord: head[0].next,
         nextWord: head[0].original,
@@ -79,7 +79,6 @@ languageRouter
     const { guess } = req.body 
     const db = req.app.get('db')
     const userId = req.user.id
-
     // If list not built yet, grab words and build list
     if(list.head === null) {
       const words = await LanguageService.getLanguageWords(
@@ -97,6 +96,17 @@ languageRouter
         db,
         userId
       )
+      console.log('head', head)
+
+      const words = await LanguageService.getLanguageWords(
+        db,
+        head[0].language_id
+      )
+
+      //console.log('words', words)
+      const nextHead = words.filter(word => word.id === head[0].next);
+      console.log('nexthead', nextHead)
+
       const correctAnswer = head[0].translation
       
       let totalScore = head[0].total_score
@@ -127,6 +137,21 @@ languageRouter
         checkAnswer = false;
       }
 
+      const newHead = nextHead[0].next
+     // console.log('words', words)
+    //  console.log('newHead', head)
+
+
+      // move head depending on memory value
+      list.remove(head[0]);
+      if (wordMemoryValue >= words.length -1) {
+        list.insertLast(head[0])
+      } else {
+        list.insertAt(head[0], wordMemoryValue)
+      }
+
+      console.log('newList', LanguageListService.display(list))
+
       // move list item M spaces back in list
       // LanguageListService.moveListItem(list, head[0].original, wordMemoryValue, listCount)
       // LanguageListService.display(list)
@@ -149,19 +174,17 @@ languageRouter
       //console.log('next will be ', currentWord.next);
     
       res.json({
-        nextWord: head[0].next,
+        nextWord: head[0].next, 
         // nextWord: nextWord,
         totalScore, // post and add 1 to score
         wordCorrectCount, // if correct post add 1 here
         wordIncorrectCount, // if incorrect post add 1 here
         answer: head[0].translation,
         isCorrect: checkAnswer
-      })
-      
+      }) 
     } catch (error) {
       next(error)
     }
-
   })
 
 module.exports = languageRouter
