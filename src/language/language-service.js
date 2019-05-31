@@ -68,7 +68,7 @@ const LanguageService = {
       .andWhere({ 'language_id': user_id});
   },
 
-  getWordFromId() {
+  getWordFromId(db, id) {
     return db 
     .from('word')
     .select('*')
