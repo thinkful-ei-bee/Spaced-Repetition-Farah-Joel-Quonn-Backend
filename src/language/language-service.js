@@ -65,7 +65,14 @@ const LanguageService = {
       )
       .join('language_id', 'language', '=', 'word.language_id' )
       .where('word_id', db.raw('language.head'))
-      .andWhere({ 'language.user_id': user_id});
+      .andWhere({ 'language_id': user_id});
+  },
+
+  getWordFromId() {
+    return db 
+    .from('word')
+    .select('*')
+    .where({ id });
   },
 
   updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
