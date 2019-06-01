@@ -133,6 +133,8 @@ languageRouter
           currentWord.next
         );
         currentWord = currentWord[0];
+        console.log('current word', currentWord.original)
+        console.log('new  head', newHead)
       }
 
       word.next = currentWord.next;
@@ -149,9 +151,8 @@ languageRouter
         }
       );
 
-      
-
       console.log("@120", currentWord.next)
+     // console.log(newHead)
       guessResObj = ({
         // nextWord: head[0].next,
         nextWord: newHead,
