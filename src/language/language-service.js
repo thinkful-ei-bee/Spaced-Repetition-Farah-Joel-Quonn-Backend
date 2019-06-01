@@ -32,11 +32,11 @@ const LanguageService = {
   getLanuageHead(db, user_id) {
     return db
       .from('language')
-      // .join('word', 'language.id', '=', 'word.language_id')
-      .join('word', {
-        'language.id': 'word.language_id',
-        'word.id': 'language.head'
-      })
+      .join('word', 'language.id', '=', 'word.language_id')
+      // .join('word', {
+      //   'language.id': 'word.language_id',
+      //   'word.id': 'language.head'
+      // })
       .select(
         'word.id',
         'word.original',
@@ -137,7 +137,6 @@ const LanguageService = {
   }, 
 
   resetMemoryValue(db, word_id, user_id) {
-    // let newMemoryValue = currentMemoryValue * 2
     return db('word')
       .update({
         memory_value: 1

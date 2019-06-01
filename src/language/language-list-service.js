@@ -15,18 +15,19 @@ function buildList(list, words) {
   // ]
   
   if (list.head === null) {
+    
     words.forEach(word => {
       list.insertLast(word)
     });
   }
 
+  // console.log("list from lls",list)
   return list
 }
 
 function display(list) {
   listHelpers.displayList(list);
-  //console.log(findIndex(list, 'nián'))
-  //console.log(list)
+  
 }
 
 function findIndex(list, item) {
@@ -63,14 +64,17 @@ function getTotal(list) {
   return count;
 }
 
-function moveListItem(list, listItem, moveToIndex, listCount) {
-  if(moveToIndex > listCount) {
-    moveToIndex = listCount
-  }
+function moveListItem(list, listItem) {
+
+// list.head = list.head.next;
+  // if(moveToIndex > listCount) {
+  //   moveToIndex = listCount
+  // }
   
   list.remove(listItem)
-  list.insertAt(moveToIndex, listItem)
-
+  list.head = list.head.next;
+  list.insertLast(listItem)
+console.log("our list:", list)
   return list
 }
 
