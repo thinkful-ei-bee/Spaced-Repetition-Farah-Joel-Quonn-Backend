@@ -58,20 +58,32 @@ class LinkedList {
       //insert between current and previous
       prevNode.next = new _Node(itemToInsert, currNode);
   }
-  insertAt(nthPosition, itemToInsert) {
-      if (nthPosition < 0) {
-          throw new Error('Position error');
+  insertAt(itemToInsert, nthPosition) {
+      if (this.head === null) {
+          if (nthPosition === 1 ) {
+              this.insertFirst(itemToInsert);
+              return;
+          } else {
+              this.insertLast(itemToInsert);
+              return;
+          }
       }
-      if (nthPosition === 0) {
-          this.insertFirst(itemToInsert);
-      }else {
-          // Find the node which we want to insert after
-          const node = this._findNthElement(nthPosition - 1);
-          const newNode = new _Node(itemToInsert, null);
-          newNode.next = node.next; 
-          node.next = newNode;
+      let currentPos = 1;
+      let currNode = this.head;
+      let prevNode = this.head;
+      while (currentPos !== nthPosition && currNode !== null) {
+          prevNode = currNode;
+          currNode = currNode.next;
+          currentPos;
       }
+      if (currNode === null) {
+          this.insertLast(itemToInsert)
+      }
+      let tempNode = currNode;
+      prevNode.next = new _Node(itemToInsert, tempNode);
   }
+
+
   _findNthElement(position) {
       let node = this.head;
       for (let i=0; i<position; i++) {

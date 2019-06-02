@@ -5,7 +5,7 @@ const languageRouter = express.Router()
 const jsonBodyParser = express.json()
 const LanguageListService = require('./language-list-service')
 const LinkedList = require('../linked-list')
-
+const { displayList, size, isEmpty, findPrevious, findLast, remove, insertFirst, insertAt, insertBefore, insertLast } = require('../linked-list-helpers')
 let list = new LinkedList
 
 languageRouter
@@ -72,95 +72,99 @@ languageRouter
 languageRouter
   .post('/guess', jsonBodyParser, async (req, res, next) => {
     const { guess } = req.body
+
     const db = req.app.get('db')
+
     const userId = req.user.id
+
     let guessResObj = {}
-    let nextWord = await LanguageService.getLanuageHead(req.app.get('db'), req.user.id);
-    //console.log(nextWord)
 
     try {
-      const head = await LanguageService.getLanuageHead(
-        db,
-        userId
-      )
+      // const head = await LanguageService.getLanuageHead(
+      //   db,
+      //   userId
+      // )
 
       const words = await LanguageService.getLanguageWords(
         db,
-        head[0].language_id
+        req.language.id
       )
-
-      LanguageListService.buildList(list, words)
       
-      let word = list.head.value
-      const correctAnswer = word.translation
-
+      list = await LanguageListService.buildList(words, req.language)
+      let head = list.head;
+      let word = head.value
+      console.log('list', list)
+      
+    
+      const correctAnswer = head.value.translation
       let totalScore = head[0].total_score //???
 
-      let wordCorrectCount = word.correct_count
-      let wordIncorrectCount = word.incorrect_count
-      let wordId = word.id
-      let wordMemoryValue = word.memory_value
+      let wordCorrectCount = head.value.correct_count
+      let wordIncorrectCount = head.value.incorrect_count
+      let wordId = head.value.id
+      let wordMemoryValue = head.value.memory_value
       let listCount = LanguageListService.getTotal(list) 
       let checkAnswer;
 
     
       if (guess === correctAnswer) {
-        // update db with values returned from promise
-        // await LanguageService.updateWordCorrectCount(db, wordId, userId, wordCorrectCount)
-        // await LanguageService.updateTotalScore(db, userId, totalScore)
-        // await LanguageService.updateMemoryValue(db, wordId, userId, wordMemoryValue, listCount)
         wordMemoryValue *= 2;
         wordCorrectCount += 1;
         totalScore += 1;
         checkAnswer = true
-       // list.head = list.head.next
       }
       else {
-        // if user answers wrong, itterate +1 to incorrect answers
-        // await LanguageService.updateWordIncorrectCount(db, wordId, userId, wordIncorrectCount)
-        // await LanguageService.resetMemoryValue(db, wordId, userId, wordMemoryValue)
         wordMemoryValue = 1;
         wordIncorrectCount += 1;
         checkAnswer = false;
-        list.head = list.head.next
       }
-
-      let newHead = word.next; // list.head.value.next
-      let currentWord = word; // list.head.value
-
-      for (let i = 0; i < word.memory_value; i++) {
-        if (!currentWord.next) {
-          break;
-        }
+      list.remove(head.value);
+      list.insertAt(head.value, head.value.memory_value + 1);
 
 
+      await LanguageService.updateLanguageWords(
+        db,
+        displayList(list),
+      )
 
-      currentWord = await LanguageService.getWordFromId(
-        req.app.get('db'),
-        currentWord.next
-      );
-      currentWord = currentWord[0];
-     // console.log('current word', currentWord.original)
-    }
+      const nextWord = list.head.value;
 
-      word.next = currentWord.next;
-      currentWord.next = word.id;
+    //   let newHead = word.next; // list.head.value.next
+    //   let currentWord = word; // list.head.value
 
-      await LanguageService.updateWord(
-        req.app.get('db'),
-        word.id,
-        {
-          next: word.next,
-        //  answer: word.translation,
-          memory_value: word.memory_value,
-          correct_count: word.correct_count,
-          incorrect_count: word.incorrect_count
-        }
-      );
+    //   for (let i = 0; i < word.memory_value; i++) {
+    //     if (!currentWord.next) {
+    //       break;
+    //     }
+
+
+
+    //   currentWord = await LanguageService.getWordFromId(
+    //     req.app.get('db'),
+    //     currentWord.next
+    //   );
+    //   currentWord = currentWord[0];
+    //  console.log('current word', currentWord)
+    // }
+
+    //   word.next = currentWord.next;
+    //   currentWord.next = word.id;
+
+    //   await LanguageService.updateWord(
+    //     req.app.get('db'),
+    //     word.id,
+    //     {
+    //       next: word.next,
+    //     //  answer: word.translation,
+    //       memory_value: word.memory_value,
+    //       correct_count: word.correct_count,
+    //       incorrect_count: word.incorrect_count
+    //     }
+    //   );
 
       console.log('next word', nextWord)
       guessResObj = ({
-        nextWord: newHead,
+        nextWord: nextWord.original,
         totalScore, // post and add 1 to score
         wordCorrectCount, // if correct post add 1 here
         wordIncorrectCount, // if incorrect post add 1 here

@@ -1,28 +1,17 @@
 const listHelpers = require('../linked-list-helpers')
+const ll = require('../linked-list');
 
-function buildList(list, words) {
-  // const words = [
-  //   'zhōu',
-  //   'nián',
-  //   'jīntiān',
-  //   'míngtiān',
-  //   'zuótiān',
-  //   'rìlì',
-  //   'miǎo',
-  //   'xiǎoshí',
-  //   'fēnzhōng',
-  //   'zhōngbiǎo'
-  // ]
+function buildList(list, language) {  
+  let linkedList = new ll();
+
+  let currNode = list.find(word => word.id === language.head);
+  linkedList.insertLast(currNode);
   
-  if (list.head === null) {
-    
-    words.forEach(word => {
-      list.insertLast(word)
-    });
+  while(currNode.next !== null) {
+    currNode = list.find(word => word.id === currNode.next);
+    linkedList.insertLast(currNode);
   }
-
-  // console.log("list from lls",list)
-  return list
+  return linkedList;
 }
 
 function display(list) {

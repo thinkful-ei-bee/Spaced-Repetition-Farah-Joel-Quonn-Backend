@@ -26,6 +26,7 @@ const LanguageService = {
         'correct_count',
         'incorrect_count',
       )
+      .orderBy('next', 'ascending')
       .where({ language_id })
   },
 
