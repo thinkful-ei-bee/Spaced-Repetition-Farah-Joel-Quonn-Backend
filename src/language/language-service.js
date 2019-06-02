@@ -169,7 +169,17 @@ const LanguageService = {
       head: obj.head, 
       total_score: obj.total_score
     });
-  }
+  },
+  async updateLanguageWords(db,listOfWords){
+    // linked list of words
+    let currNode = listOfWords.head;
+    let nextId = null
+    while(currNode !== null){
+      await LanguageService.updateLanguageWord(db,currNode.data);
+      currNode = currNode.next;
+    }
+    return;
+  },
 
 }
 

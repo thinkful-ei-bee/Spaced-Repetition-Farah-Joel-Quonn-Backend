@@ -90,7 +90,6 @@ languageRouter
       )
 
       LanguageListService.buildList(list, words)
-      console.log(list.head.value)
       
       let word = list.head.value
       const correctAnswer = word.translation
@@ -114,7 +113,7 @@ languageRouter
         wordCorrectCount += 1;
         totalScore += 1;
         checkAnswer = true
-        list.head = list.head.next
+       // list.head = list.head.next
       }
       else {
         // if user answers wrong, itterate +1 to incorrect answers
@@ -134,13 +133,15 @@ languageRouter
           break;
         }
 
-        currentWord = await LanguageService.getWordFromId(
-          req.app.get('db'),
-          currentWord.next
-        );
-        currentWord = currentWord[0];
-        console.log('current word', currentWord.original)
-      }
+
+
+      currentWord = await LanguageService.getWordFromId(
+        req.app.get('db'),
+        currentWord.next
+      );
+      currentWord = currentWord[0];
+     // console.log('current word', currentWord.original)
+    }
 
       word.next = currentWord.next;
       currentWord.next = word.id;
@@ -157,7 +158,7 @@ languageRouter
         }
       );
 
-      console.log("@120", currentWord.next)
+      console.log('next word', nextWord)
       guessResObj = ({
         nextWord: newHead,
         totalScore, // post and add 1 to score
