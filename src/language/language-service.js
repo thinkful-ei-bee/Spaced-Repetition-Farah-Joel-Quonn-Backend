@@ -34,10 +34,6 @@ const LanguageService = {
     return db
       .from('language')
       .join('word', 'language.id', '=', 'word.language_id')
-      // .join('word', {
-      //   'language.id': 'word.language_id',
-      //   'word.id': 'language.head'
-      // })
       .select(
         'word.id',
         'word.original',
@@ -76,30 +72,6 @@ const LanguageService = {
     .where( {'word_id': id}  );
   },
 
-  updateWordCorrectCount(db, word_id, user_id, currentCorrectCount) {
-    let newCount = currentCorrectCount + 1
-    return db('word')
-      .update({
-        correct_count: newCount
-      })
-      .where({
-        id: word_id,
-        language_id: user_id
-      })
-  },
-
-  updateWordIncorrectCount(db, word_id, user_id, currentIncorrectCount) {
-    let newCount = currentIncorrectCount + 1
-    return db('word')
-      .update({
-        incorrect_count: newCount
-      })
-      .where({
-        id: word_id,
-        language_id: user_id
-      })
-  },
-
   updateTotalScore(db, user_id, currentTotalScore) {    
     let newScore = currentTotalScore + 1
     return db('language')
@@ -108,17 +80,6 @@ const LanguageService = {
       })
       .where({
         id: user_id
-      })
-  },
-
-  resetMemoryValue(db, word_id, user_id) {
-    return db('word')
-      .update({
-        memory_value: 1
-      })
-      .where({
-        id: word_id,
-        language_id: user_id
       })
   },
 
