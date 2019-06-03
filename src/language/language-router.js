@@ -55,14 +55,17 @@ languageRouter
         req.user.id
       )
 
+      console.log('headword:', head[0])
+      console.log('headword.next:', head[0].next)
+
       const db = req.app.get('db')
 
-      const words = await LanguageService.getLanguageWords(
-        db,
-        req.language.id
-      )
+      // const words = await LanguageService.getLanguageWords(
+      //   db,
+      //   req.language.id
+      // )
 
-      let list = await LanguageListService.buildList(words, req.language)
+      // let list = await LanguageListService.buildList(words, req.language)
 
       res.json({
         nextWord: head[0].original,
@@ -83,19 +86,22 @@ languageRouter
     const { guess } = req.body
 
     const db = req.app.get('db')
-
     const userId = req.user.id
-
     let guessResObj = {}
+
+    // will uncomment later
+    // if (!guess) {     
+    //   return res.status(400).send({error: `Missing 'guess' in request body`});
+    // }
 
     let list;
 
     try {
-      // const head = await LanguageService.getLanuageHead(
-      //   db,
-      //   userId
+      // let head = await LanguageService.getLanuageHead(
+      //   req.app.get('db'),
+      //   req.user.id
       // )
-
+  
       const words = await LanguageService.getLanguageWords(
         db,
         req.language.id
@@ -103,10 +109,10 @@ languageRouter
 
       console.log('words', words)
       list = await LanguageListService.buildList(words, req.language)
+      console.log('list', list)
+      
       let head = list.head
-
-      let word = head.value  
-      console.log('word:', word)    
+      let word = head.value     
     
       const correctAnswer = head.value.translation
       let totalScore = head.value.total_score //???
@@ -130,8 +136,15 @@ languageRouter
         wordIncorrectCount += 1;
         checkAnswer = false;
       }
+     // let nextWord = list.head.next;
+      
+      //nextWord = list.head;
+    //  console.log('list head:', list.head.next)
+
       list.remove(head.value);
       list.insertAt(head.value, head.value.memory_value + 1);
+
+      //console.log('next word', nextWord)
 
 
       await LanguageService.updateLanguageWords(
@@ -142,6 +155,7 @@ languageRouter
       )
 
       const nextWord = list.head.value;
+      console.log('next word', nextWord)
 
     //   let newHead = word.next; // list.head.value.next
     //   let currentWord = word; // list.head.value
@@ -176,13 +190,13 @@ languageRouter
     //     }
     //   );
 
-      console.log('next word', nextWord)
+
       guessResObj = ({
         nextWord: nextWord.original,
         totalScore, // post and add 1 to score
         wordCorrectCount, // if correct post add 1 here
         wordIncorrectCount, // if incorrect post add 1 here
-        answer: word.translation,
+        answer: nextWord.translation,
         isCorrect: checkAnswer
       })
     }

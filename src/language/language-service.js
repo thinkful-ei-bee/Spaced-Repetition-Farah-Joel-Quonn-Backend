@@ -106,9 +106,9 @@ const LanguageService = {
       total_score: obj.total_score
     });
   },
-  async updateLanguageWords(db,listOfWords){
+  async updateLanguageWords(db,list){
     // linked list of words
-    let currNode = listOfWords.head;
+    let currNode = list.head;
     let nextId = null
     while(currNode !== null){
       await LanguageService.updateLanguageWord(db,currNode.value);
@@ -122,6 +122,15 @@ const LanguageService = {
       .select('*')
       .where({'id':word.id})
       .update(word)
+  },
+  getHeadWord(db, languageId) {
+    return db
+      .from('word')
+      .select('word.*')
+
+      .join('language', 'language.head', '=', 'word.id')
+      .where({ 'language_id': languageId });
+
   },
 }
 

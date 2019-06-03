@@ -20,12 +20,13 @@ class LinkedList {
           this.insertFirst(item);
       }
       else{
-
           let tempNode = this.head;
           while(tempNode.next !== null){
               tempNode = tempNode.next;
+              
           }
           tempNode.next = new _Node(item, null);
+          
       }
   }
   /**Inserts a new node after a node containing the key.*/
