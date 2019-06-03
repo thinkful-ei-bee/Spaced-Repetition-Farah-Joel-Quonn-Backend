@@ -1,7 +1,7 @@
 function displayList(list){
   let currNode = list.head;
   while (currNode !== null) {
-      console.log("display list:" + currNode.value);
+      console.log("list:" + currNode.value);
       currNode = currNode.next;
   }
 }

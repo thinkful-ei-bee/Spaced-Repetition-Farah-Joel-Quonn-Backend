@@ -6,7 +6,6 @@ function buildList(list, language) {
   let linkedList = new ll();
 
   let newList = list.map(node => {
-  // console.log('node', node.original)
     linkedList.insertLast(node);
   })
   let currNode = list.find(word => word.id === language.head);
@@ -14,9 +13,7 @@ function buildList(list, language) {
   while(currNode.next !== null) {
     currNode = list.find(word => word.id === currNode.next);
     linkedList.insertLast(currNode);
-  }
- // console.log('linkedlist', linkedList)
-  
+  }  
   return linkedList;
 }
 
