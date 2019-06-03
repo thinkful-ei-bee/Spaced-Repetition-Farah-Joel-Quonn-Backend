@@ -20,7 +20,6 @@ class LinkedList {
           this.insertFirst(item);
       }
       else{
-        console.log('inside else statement, insertLast-item', item)
 
           let tempNode = this.head;
           while(tempNode.next !== null){

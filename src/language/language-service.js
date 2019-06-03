@@ -111,32 +111,6 @@ const LanguageService = {
       })
   },
 
-  updateMemoryValue(db, word_id, user_id, currentMemoryValue, listTotal) {
-    let newMemoryValue
-
-    // address out of range for smallint error
-    // also for sanity, keep memory value within
-    // a reasonable range
-
-    console.log(`currentMemoryValue: ${currentMemoryValue} listTotal: ${listTotal}`)
-    if (currentMemoryValue <= listTotal) {
-      newMemoryValue = currentMemoryValue * 2
-    }
-    else {
-      newMemoryValue = listTotal
-    }
-    console.log(`currentMemoryValue: ${currentMemoryValue} listTotal: ${listTotal}`)
-
-    return db('word')
-      .update({
-        memory_value: newMemoryValue
-      })
-      .where({
-        id: word_id,
-        language_id: user_id
-      })
-  }, 
-
   resetMemoryValue(db, word_id, user_id) {
     return db('word')
       .update({

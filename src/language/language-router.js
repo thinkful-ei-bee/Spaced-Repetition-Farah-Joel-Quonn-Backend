@@ -55,15 +55,7 @@ languageRouter
         req.user.id
       )
 
-
-    const db = req.app.get('db')
-
-  //  const userId = req.user.id
-
-   // let guessResObj = {}
-
-    //let list;
-
+      const db = req.app.get('db')
 
       const words = await LanguageService.getLanguageWords(
         db,
@@ -109,13 +101,12 @@ languageRouter
         req.language.id
       )
 
-      //console.log('words', words)
+      console.log('words', words)
       list = await LanguageListService.buildList(words, req.language)
       let head = list.head
 
-      let word = head.value
-      console.log('list', list)
-      
+      let word = head.value  
+      console.log('word:', word)    
     
       const correctAnswer = head.value.translation
       let totalScore = head.value.total_score //???
