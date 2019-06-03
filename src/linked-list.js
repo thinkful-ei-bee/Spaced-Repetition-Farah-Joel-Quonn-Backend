@@ -11,14 +11,17 @@ class LinkedList {
   }
 
   insertFirst(item){
-      this.head = new _Node(item, this.head);
+      this.head = new _Node(item, null);
   }
 
   insertLast(item){
+      
       if(this.head === null){
           this.insertFirst(item);
       }
       else{
+        console.log('inside else statement, insertLast-item', item)
+
           let tempNode = this.head;
           while(tempNode.next !== null){
               tempNode = tempNode.next;

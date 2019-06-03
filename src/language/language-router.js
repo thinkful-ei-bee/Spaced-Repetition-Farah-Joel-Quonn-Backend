@@ -6,7 +6,7 @@ const jsonBodyParser = express.json()
 const LanguageListService = require('./language-list-service')
 const LinkedList = require('../linked-list')
 const { displayList, size, isEmpty, findPrevious, findLast, remove, insertFirst, insertAt, insertBefore, insertLast } = require('../linked-list-helpers')
-let list = new LinkedList
+//let list = new LinkedList
 
 languageRouter
   .use(requireAuth)
@@ -55,6 +55,23 @@ languageRouter
         req.user.id
       )
 
+
+    const db = req.app.get('db')
+
+  //  const userId = req.user.id
+
+   // let guessResObj = {}
+
+    //let list;
+
+
+      const words = await LanguageService.getLanguageWords(
+        db,
+        req.language.id
+      )
+
+      let list = await LanguageListService.buildList(words, req.language)
+
       res.json({
         nextWord: head[0].original,
         totalScore: head[0].total_score,
@@ -79,6 +96,8 @@ languageRouter
 
     let guessResObj = {}
 
+    let list;
+
     try {
       // const head = await LanguageService.getLanuageHead(
       //   db,
@@ -89,15 +108,17 @@ languageRouter
         db,
         req.language.id
       )
-      
+
+      //console.log('words', words)
       list = await LanguageListService.buildList(words, req.language)
-      let head = list.head;
+      let head = list.head
+
       let word = head.value
       console.log('list', list)
       
     
       const correctAnswer = head.value.translation
-      let totalScore = head[0].total_score //???
+      let totalScore = head.value.total_score //???
 
       let wordCorrectCount = head.value.correct_count
       let wordIncorrectCount = head.value.incorrect_count
@@ -124,7 +145,9 @@ languageRouter
 
       await LanguageService.updateLanguageWords(
         db,
-        displayList(list),
+        list,
+        req.language.id,
+        req.language.total_score
       )
 
       const nextWord = list.head.value;

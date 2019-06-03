@@ -176,12 +176,18 @@ const LanguageService = {
     let currNode = listOfWords.head;
     let nextId = null
     while(currNode !== null){
-      await LanguageService.updateLanguageWord(db,currNode.data);
+      await LanguageService.updateLanguageWord(db,currNode.value);
       currNode = currNode.next;
     }
     return;
   },
-
+  updateLanguageWord(db,word){
+    return db
+      .from('word')
+      .select('*')
+      .where({'id':word.id})
+      .update(word)
+  },
 }
 
 module.exports = LanguageService

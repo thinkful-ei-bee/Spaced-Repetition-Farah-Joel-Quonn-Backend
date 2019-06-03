@@ -1,4 +1,5 @@
 require('dotenv').config()
+const debug = require('debug');
 
 const knex = require('knex')
 const app = require('./app')

@@ -1,16 +1,25 @@
 const listHelpers = require('../linked-list-helpers')
 const ll = require('../linked-list');
+const debug = require('debug');
 
 function buildList(list, language) {  
   let linkedList = new ll();
 
-  let currNode = list.find(word => word.id === language.head);
-  linkedList.insertLast(currNode);
+  let newList = list.map(node => {
+  //  console.log('node', node.original)
+    linkedList.insertLast(node);
+  })
+ // let currNode = list.find(word => word.id === language.head);
   
-  while(currNode.next !== null) {
-    currNode = list.find(word => word.id === currNode.next);
-    linkedList.insertLast(currNode);
-  }
+
+
+  console.log('linkedlist', linkedList)
+
+  // while(currNode.next !== null) {
+  //   currNode = list.find(word => word.id === currNode.next);
+  //   linkedList.insertLast(currNode);
+  // }
+  
   return linkedList;
 }
 
