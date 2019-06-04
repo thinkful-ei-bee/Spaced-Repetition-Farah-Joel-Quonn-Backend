@@ -9,7 +9,7 @@ languageRouter
   .use(async (req, res, next) => {
     try {
       const language = await LanguageService.getUsersLanguage(
-        req.app.get('db'),
+        req.app.get('db'), // uses req.user.id to get the user's language from language table
         req.user.id,
       )
 
@@ -29,8 +29,8 @@ languageRouter
   .get('/', async (req, res, next) => {
     try {
       const words = await LanguageService.getLanguageWords(
-        req.app.get('db'), 
-        req.language.id, 
+        req.app.get('db'), // uses language.id to get the items from word table
+        req.language.id, //language.id comes from async function above
       )
 
       res.json({
@@ -46,120 +46,129 @@ languageRouter
 
 languageRouter
   .get('/head', async (req, res, next) => {
-    
-    const db = req.app.get('db')
-    const userId = req.user.id
-
-    let word = await LanguageService.getLanguageHead(
-      db, 
-      userId,
+    let word = await LanguageService.getHeadWord(
+      req.app.get('db'), 
+        req.user.id,
     )
-    
     let totalScore = await LanguageService.getTotalScore(
-      db,
-      userId
+      req.app.get('db'),
+      req.user.id
     );
 
     word = word[0];
     totalScore = totalScore[0];
 
-      const head = {
+      const headWord = {
         nextWord: word.original,
         wordCorrectCount: word.correct_count,
         wordIncorrectCount: word.incorrect_count,
         totalScore: Number(totalScore.total_score)
     }
 
-    return res.status(200).json(head);
+    return res.status(200).json(headWord);
   })
+
+
+
 
 languageRouter
   .post('/guess', jsonBodyParser, async (req, res, next) => {
 
     let guess = req.body.guess
 
-    const db = req.app.get('db')
-    const userId = req.user.id
-
     try {
-      if (!guess) {     
-        return res.status(400).send({error: `Missing 'guess' in request body`});
-      }
+   
+    if (!guess) {     
+      return res.status(400).send({error: `Missing 'guess' in request body`});
+    }
 
-    let head = await LanguageService.getLanguageHead(
-        db, 
+   
+
+    let headWord = await LanguageService.getHeadWord(
+      req.app.get('db'), 
         req.language.id,
     )
+    headWord=await headWord;
+    headWord=headWord[0];
+    console.log('headword:', headWord)
 
-      head = await head;
-      head = head[0];
 
-     let totalScore = await LanguageService.getScore(
-        db,
-        req.user.id
+
+     let totalScore = await LanguageService.getTotalScore(
+       req.app.get('db'),
+       req.user.id
        );
       totalScore = await totalScore;
       totalScore = totalScore[0].total_score
   
        
     let resObj = {
-      answer: head.translation
-    }  
 
-    if(guess === head.translation){  
+      answer:headWord.translation
+    }  
+    
+    if(guess === headWord.translation){  
         
       resObj.isCorrect=true
       resObj.totalScore= totalScore += 1;
 
-      head.memory_value *= 2;
-      head.correct_count += 1;
+      headWord.memory_value *= 2;
+      headWord.correct_count += 1;
 
     } else{
       resObj.isCorrect=false;
       resObj.totalScore = totalScore;
 
-      head.memory_value = 1;
-      head.incorrect_count += 1;
+      headWord.memory_value = 1;
+      headWord.incorrect_count += 1;
     }
+      
 
-    let nextHead= head.next;
 
-    let prevWord = head;
+   
+    let nextHead= headWord.next;
+
+    let prevWord = headWord;
+
     
-    for (let i = 0; i < head.memory_value; i++) {
+    for (let i = 0; i < headWord.memory_value; i++) {
       if (!prevWord.next) {
         break;
       }
 
       prevWord = await LanguageService.getWordById(
-        db,
+        req.app.get('db'),
         prevWord.next
       );
       prevWord = prevWord[0];
     }
-    head.next = prevWord.next;
-    prevWord.next = head.id;
+    headWord.next = prevWord.next;
+    prevWord.next = headWord.id;
     
+      
+
+
+
     await LanguageService.updateWord(
-      db,
-      head.id,
+      req.app.get('db'),
+      headWord.id,
       {
-        memory_value : head.memory_value,
-        correct_count: head.correct_count,
-        incorrect_count:head.incorrect_count,
-        next: head.next
+        memory_value : headWord.memory_value,
+        correct_count: headWord.correct_count,
+        incorrect_count:headWord.incorrect_count,
+        next: headWord.next
       }
     );
     await LanguageService.updateWord(
-      db,
+      req.app.get('db'),
       prevWord.id,
       {
-        next: head.id,
+        next: headWord.id,
       }
     )
 
-      await LanguageService.updateLanguage(
-        db,
+      await LanguageService.updateLanguageTable(
+        req.app.get('db'),
         req.user.id,
         {
           total_score:Number(resObj.totalScore),
@@ -168,13 +177,15 @@ languageRouter
       );
 
 
-      let newHead = await LanguageService.getLanguageHead(
-        db,
+      let newHead = await LanguageService.getHeadWord(
+        req.app.get('db'),
         req.user.id
       )
       newHead= await newHead
       
       newHead = newHead[0]
+
+
 
        response = {
         nextWord:newHead.original,
@@ -184,6 +195,7 @@ languageRouter
         isCorrect:resObj.isCorrect,
         totalScore:Number(resObj.totalScore),
       }
+      
 
        res.status(200).json(response)
        
