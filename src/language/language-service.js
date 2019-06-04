@@ -27,8 +27,8 @@ const LanguageService = {
         'incorrect_count',
       )
       .where({ language_id })
-   
   },
+
   getLanguageHead(db, languageId) {
     return db
       .from('word')
@@ -36,8 +36,15 @@ const LanguageService = {
 
       .join('language', 'language.head', '=', 'word.id')
       .where({ 'language_id': languageId });
-
   },
+
+  getTotalScore(db, userId) {
+    return db
+      .from('language')
+      .select('total_score')
+      .where({'language.user_id': userId })
+  },
+
   getWordById(db, id) {
     return db 
       .from('word')
@@ -51,6 +58,7 @@ const LanguageService = {
       .where({id} )
       .update(wordChanges)
   },
+
   updateLanguage(db,id , changes){
     return db
       .from ('language')
@@ -58,14 +66,8 @@ const LanguageService = {
       .update({
         total_score: changes.total_score,
         head: changes.head
-      }) 
-  },
-  getScore(db, userId) {
-    return db
-      .from('language')
-      .select('total_score')
-      .where({'language.user_id': userId })
-  },
+    }) 
+  }
 }
 
 module.exports = LanguageService

@@ -9,7 +9,7 @@ languageRouter
   .use(async (req, res, next) => {
     try {
       const language = await LanguageService.getUsersLanguage(
-        req.app.get('db'), // uses req.user.id to get the user's language from language table
+        req.app.get('db'),
         req.user.id,
       )
 
@@ -55,7 +55,7 @@ languageRouter
       userId,
     )
     
-    let totalScore = await LanguageService.getScore(
+    let totalScore = await LanguageService.getTotalScore(
       db,
       userId
     );
