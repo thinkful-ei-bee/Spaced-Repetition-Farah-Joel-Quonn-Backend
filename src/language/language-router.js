@@ -92,8 +92,7 @@ languageRouter
     headWord=headWord[0];
     console.log('headword:', headWord)
 
-
-
+    
      let totalScore = await LanguageService.getTotalScore(
        req.app.get('db'),
        req.user.id
@@ -106,7 +105,7 @@ languageRouter
 
       answer:headWord.translation
     }  
-    
+
     if(guess === headWord.translation){  
         
       resObj.isCorrect=true
